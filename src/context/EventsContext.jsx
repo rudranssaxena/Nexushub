@@ -8,28 +8,47 @@ import { getEventStart, hasEnded } from '../utils/dates';
 
 const EventsContext = createContext(null);
 
+const EMPTY_STORE = { added: [], edited: {}, deleted: [] };
+const loadStore = (key) => ({ ...EMPTY_STORE, ...storage.get(key, {}) });
+
+const slugify = (s) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'item';
+const uid = (name) => `${slugify(name)}-${Math.random().toString(36).slice(2, 6)}`;
+
 /**
- * Holds events/clubs plus everything that changes: tickets, bookmarks, seats left and check-ins.
+ * Overlay admin changes on the seed JSON: seed items can be edited or deleted, and new items added.
+ * Keeping the seed data untouched means a "reset" is just clearing localStorage.
+ */
+function applyStore(seed, store) {
+  const base = seed.filter((x) => !store.deleted.includes(x.id)).map((x) => store.edited[x.id] || x);
+  return [...base, ...store.added];
+}
+
+/**
+ * Holds events/clubs plus everything that changes: tickets, bookmarks, seats left and check-ins,
+ * and the admin operations that create/edit/delete events and clubs.
  * All persisted to localStorage (there is no backend).
  */
 export function EventsProvider({ children }) {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const [tickets, setTickets] = useState(() => storage.get(KEYS.tickets, []));
   const [bookmarkMap, setBookmarkMap] = useState(() => storage.get(KEYS.bookmarks, {}));
   const [seatsTaken, setSeatsTaken] = useState(() => storage.get(KEYS.seatsTaken, {}));
   const [checkins, setCheckins] = useState(() => storage.get(KEYS.checkins, {}));
+  const [eventStore, setEventStore] = useState(() => loadStore(KEYS.adminEvents));
+  const [clubStore, setClubStore] = useState(() => loadStore(KEYS.adminClubs));
 
-  const clubs = clubsData;
+  const clubs = useMemo(() => applyStore(clubsData, clubStore), [clubStore]);
 
   // Events with the live seats-left figure applied.
   const events = useMemo(
     () =>
-      eventsData.map((e) => ({
+      applyStore(eventsData, eventStore).map((e) => ({
         ...e,
         seatsLeft: Math.max(0, e.seatsLeft - (seatsTaken[e.id] || 0)),
       })),
-    [seatsTaken]
+    [eventStore, seatsTaken]
   );
 
   const getEvent = useCallback((id) => events.find((e) => e.id === id), [events]);
@@ -80,20 +99,34 @@ export function EventsProvider({ children }) {
     [user, events, tickets, seatsTaken]
   );
 
-  /** Cancel a registration and give the seat back (unless already checked in). */
-  const cancelRegistration = useCallback(
+  /** Remove a ticket and give the seat back. Shared by student cancel and admin remove. */
+  const removeTicket = useCallback(
     (ticketId) => {
       const ticket = tickets.find((t) => t.id === ticketId);
-      if (!ticket || checkins[ticketId]) return false;
+      if (!ticket) return false;
       const nextTickets = tickets.filter((t) => t.id !== ticketId);
       const nextSeats = { ...seatsTaken, [ticket.eventId]: Math.max(0, (seatsTaken[ticket.eventId] || 0) - 1) };
       setTickets(nextTickets);
       setSeatsTaken(nextSeats);
       storage.set(KEYS.tickets, nextTickets);
       storage.set(KEYS.seatsTaken, nextSeats);
+      if (checkins[ticketId]) {
+        const { [ticketId]: _removed, ...rest } = checkins;
+        setCheckins(rest);
+        storage.set(KEYS.checkins, rest);
+      }
       return true;
     },
     [tickets, seatsTaken, checkins]
+  );
+
+  /** Student cancels their own registration (not allowed once checked in). */
+  const cancelRegistration = useCallback(
+    (ticketId) => {
+      if (checkins[ticketId]) return false;
+      return removeTicket(ticketId);
+    },
+    [checkins, removeTicket]
   );
 
   // ---- Bookmarks -----------------------------------------------------------
@@ -120,6 +153,11 @@ export function EventsProvider({ children }) {
   const bookmarkedEvents = useMemo(() => events.filter((e) => bookmarkIds.includes(e.id)), [events, bookmarkIds]);
 
   // ---- Check-in ------------------------------------------------------------
+  const saveCheckins = (next) => {
+    setCheckins(next);
+    storage.set(KEYS.checkins, next);
+  };
+
   /**
    * Validate scanned/pasted ticket text and check the attendee in.
    * Returns { status: 'success' | 'duplicate' | 'invalid', ticket?, checkedInAt? }
@@ -147,9 +185,7 @@ export function EventsProvider({ children }) {
         return { status: 'duplicate', ticket, checkedInAt: checkins[ticket.id] };
       }
       const at = new Date().toISOString();
-      const next = { ...checkins, [ticket.id]: at };
-      setCheckins(next);
-      storage.set(KEYS.checkins, next);
+      saveCheckins({ ...checkins, [ticket.id]: at });
       return { status: 'success', ticket, checkedInAt: at };
     },
     [tickets, checkins]
@@ -157,16 +193,125 @@ export function EventsProvider({ children }) {
 
   const isCheckedIn = useCallback((ticketId) => !!checkins[ticketId], [checkins]);
 
-  const value = useMemo(
-    () => ({
-      events, clubs, getEvent, getClub,
-      myTickets, getMyTicketForEvent, registerForEvent, cancelRegistration,
-      bookmarkIds, isBookmarked, toggleBookmark, bookmarkedEvents,
-      checkIn, isCheckedIn,
-    }),
-    [events, clubs, getEvent, getClub, myTickets, getMyTicketForEvent, registerForEvent,
-     cancelRegistration, bookmarkIds, isBookmarked, toggleBookmark, bookmarkedEvents, checkIn, isCheckedIn]
-  );
+  // ---- Admin operations (all no-ops for non-admins) ---------------------------
+  const guard = () => (isAdmin ? null : { ok: false, error: 'Admins only.' });
+
+  const persistEvents = (updater) =>
+    setEventStore((prev) => {
+      const next = updater(prev);
+      storage.set(KEYS.adminEvents, next);
+      return next;
+    });
+  const persistClubs = (updater) =>
+    setClubStore((prev) => {
+      const next = updater(prev);
+      storage.set(KEYS.adminClubs, next);
+      return next;
+    });
+
+  /** `data.seatsLeft` is the number of seats open right now. */
+  const addEvent = (data) => {
+    const denied = guard();
+    if (denied) return denied;
+    const event = { ...data, id: uid(data.title) };
+    persistEvents((prev) => ({ ...prev, added: [...prev.added, event] }));
+    return { ok: true, event };
+  };
+
+  const updateEvent = (id, data) => {
+    const denied = guard();
+    if (denied) return denied;
+    // The context subtracts online registrations from the stored figure, so add them back
+    // here so the admin's "seats open now" number is what attendees will actually see.
+    const event = { ...data, id, seatsLeft: Number(data.seatsLeft) + (seatsTaken[id] || 0) };
+    persistEvents((prev) =>
+      prev.added.some((e) => e.id === id)
+        ? { ...prev, added: prev.added.map((e) => (e.id === id ? event : e)) }
+        : { ...prev, edited: { ...prev.edited, [id]: event } }
+    );
+    return { ok: true, event };
+  };
+
+  const deleteEvent = (id) => {
+    const denied = guard();
+    if (denied) return denied;
+    persistEvents((prev) => {
+      const { [id]: _drop, ...edited } = prev.edited;
+      return prev.added.some((e) => e.id === id)
+        ? { ...prev, added: prev.added.filter((e) => e.id !== id), edited }
+        : { ...prev, deleted: [...prev.deleted, id], edited };
+    });
+    // Drop its tickets and seat counter so nothing is left pointing at a missing event.
+    const nextTickets = tickets.filter((t) => t.eventId !== id);
+    const { [id]: _seats, ...nextSeats } = seatsTaken;
+    const gone = new Set(tickets.filter((t) => t.eventId === id).map((t) => t.id));
+    const nextCheckins = Object.fromEntries(Object.entries(checkins).filter(([k]) => !gone.has(k)));
+    setTickets(nextTickets);
+    setSeatsTaken(nextSeats);
+    saveCheckins(nextCheckins);
+    storage.set(KEYS.tickets, nextTickets);
+    storage.set(KEYS.seatsTaken, nextSeats);
+    return { ok: true };
+  };
+
+  const addClub = (data) => {
+    const denied = guard();
+    if (denied) return denied;
+    const club = { ...data, id: uid(data.name) };
+    persistClubs((prev) => ({ ...prev, added: [...prev.added, club] }));
+    return { ok: true, club };
+  };
+
+  const updateClub = (id, data) => {
+    const denied = guard();
+    if (denied) return denied;
+    const club = { ...data, id };
+    persistClubs((prev) =>
+      prev.added.some((c) => c.id === id)
+        ? { ...prev, added: prev.added.map((c) => (c.id === id ? club : c)) }
+        : { ...prev, edited: { ...prev.edited, [id]: club } }
+    );
+    return { ok: true, club };
+  };
+
+  const deleteClub = (id) => {
+    const denied = guard();
+    if (denied) return denied;
+    if (events.some((e) => e.club === id))
+      return { ok: false, error: 'This club still has events. Delete or move them first.' };
+    persistClubs((prev) => {
+      const { [id]: _drop, ...edited } = prev.edited;
+      return prev.added.some((c) => c.id === id)
+        ? { ...prev, added: prev.added.filter((c) => c.id !== id), edited }
+        : { ...prev, deleted: [...prev.deleted, id], edited };
+    });
+    return { ok: true };
+  };
+
+  /** Manual check-in / undo from the registrations table. */
+  const adminCheckIn = (ticketId) => {
+    if (!isAdmin || checkins[ticketId]) return false;
+    saveCheckins({ ...checkins, [ticketId]: new Date().toISOString() });
+    return true;
+  };
+  const adminUndoCheckIn = (ticketId) => {
+    if (!isAdmin || !checkins[ticketId]) return false;
+    const { [ticketId]: _removed, ...rest } = checkins;
+    saveCheckins(rest);
+    return true;
+  };
+  const adminRemoveTicket = (ticketId) => (isAdmin ? removeTicket(ticketId) : false);
+
+  const value = {
+    events, clubs, getEvent, getClub,
+    myTickets, getMyTicketForEvent, registerForEvent, cancelRegistration,
+    bookmarkIds, isBookmarked, toggleBookmark, bookmarkedEvents,
+    checkIn, isCheckedIn,
+    // admin
+    allTickets: tickets, checkins,
+    addEvent, updateEvent, deleteEvent, addClub, updateClub, deleteClub,
+    adminCheckIn, adminUndoCheckIn, adminRemoveTicket,
+  };
 
   return <EventsContext.Provider value={value}>{children}</EventsContext.Provider>;
 }

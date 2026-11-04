@@ -1,5 +1,5 @@
 // "For You" ranking: score each upcoming event by how many of its tags match the user's interests.
-import { hasEnded } from './dates';
+import { getEventStart, hasEnded } from './dates';
 
 export function scoreEvent(event, interests = []) {
   if (!interests.length) return 0;
@@ -12,7 +12,7 @@ export function recommendEvents(events, interests = [], limit = 4) {
     .filter((e) => !hasEnded(e))
     .map((e) => ({ event: e, score: scoreEvent(e, interests) }))
     .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score || a.event.dayOffset - b.event.dayOffset)
+    .sort((a, b) => b.score - a.score || getEventStart(a.event) - getEventStart(b.event))
     .slice(0, limit)
     .map((x) => x.event);
 }

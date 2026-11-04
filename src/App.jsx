@@ -14,6 +14,7 @@ import EventDetails from './pages/EventDetails';
 import Clubs from './pages/Clubs';
 import ClubDetails from './pages/ClubDetails';
 import Dashboard from './pages/Dashboard';
+import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
 
 // The scanner pulls in html5-qrcode (large), so load it only when /scan is opened.
@@ -40,6 +41,14 @@ export default function App() {
               element={page(
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin"
+              element={page(
+                <ProtectedRoute adminOnly>
+                  <Admin />
                 </ProtectedRoute>
               )}
             />

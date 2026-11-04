@@ -29,7 +29,7 @@ export default function EventCard({ event, index = 0, reason }) {
       {/* Poster */}
       <Link to={`/events/${event.id}`} className="relative block aspect-[16/10] overflow-hidden" aria-label={`View ${event.title}`}>
         <div className={`absolute inset-0 bg-gradient-to-br ${event.gradient}`} aria-hidden="true" />
-        {imgOk && (
+        {imgOk && event.poster && (
           <img
             src={event.poster}
             alt={`${event.title} poster`}

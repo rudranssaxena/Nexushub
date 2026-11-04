@@ -1,8 +1,11 @@
-// Date helpers. Mock events store a `dayOffset` (days from today) + `time`, so the demo
-// always shows genuinely upcoming events no matter when it is opened.
+// Date helpers. Seed events store a `dayOffset` (days from today) + `time`, so the demo
+// always shows genuinely upcoming events no matter when it is opened. Events created or
+// edited by an admin store an absolute `startISO` instead.
 
 /** Real start Date of an event. */
 export function getEventStart(event) {
+  // Admin-created/edited events carry an absolute start time.
+  if (event.startISO) return new Date(event.startISO);
   const [h, m] = event.time.split(':').map(Number);
   const d = new Date();
   d.setHours(h, m, 0, 0);

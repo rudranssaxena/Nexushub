@@ -15,6 +15,14 @@ Built for the college hackathon, **Problem Statement 2**. It is a fully client-s
 - **Protected dashboard**: redirects guests to the landing page and opens the sign-in dialog. Shows name, avatar, registered events (**My Tickets**) and bookmarked events.
 - **Event registration + QR ticket**: every event has a **Register** button that issues a ticket with a unique ID. The QR encodes ticket ID, event name, date, venue and attendee name. Tickets live under **My Tickets** and can be **downloaded as a PNG image**.
 
+### Admin panel (`/admin`)
+- **Admin sign-in (mock)**: in the sign-in dialog choose **Continue as Admin (demo)**. Students who open `/admin` are redirected to their dashboard.
+- **Overview**: upcoming events, clubs, registrations, check-in rate, seats filled, and simple bar charts.
+- **Events**: create, edit and delete events (validated form). Deleting an event also removes its registrations.
+- **Clubs**: create, edit and delete clubs (a club with events can't be deleted).
+- **Registrations**: search and filter attendees, manually check in or undo, remove a registration (releases the seat), and **export CSV**.
+- Admin changes are saved in `localStorage` on top of the seed JSON; clearing site data resets everything.
+
 ### Extras
 - **QR check-in (`/scan`)**: scan with the device camera, upload a QR image, or paste the ticket text/ID. Shows **Checked in ✅** with attendee details and **blocks duplicate check-ins**.
 - **For You recommendations**: after first login, pick interests (coding, robotics, music, sports, art, entrepreneurship). Events are ranked by tag match into **Recommended for you**.
@@ -64,13 +72,14 @@ npm run preview   # serve the production build locally
 6. **My Tickets**: open the dashboard to see the ticket and **Download** it as an image.
 7. **Scan check-in**: open **Check-in** (`/scan`). Scan the QR with the camera, or on one device use **Paste the ticket → Use my latest ticket (demo)** and press **Check in**.
 8. **Duplicate check**: check in the same ticket again to see "Already checked in".
+9. **Admin**: log out, sign in with **Continue as Admin (demo)**, open **Admin** in the navbar. Create an event, view registrations, export CSV.
 
 ## Project structure
 
 ```
 src/
-├── components/   Reusable UI: Navbar, EventCard, TicketCard, Modal, Countdown, ...
-├── pages/        Landing, Events, EventDetails, Clubs, ClubDetails, Dashboard, Scan, NotFound
+├── components/   Reusable UI (admin/ holds the admin panel tabs and forms): Navbar, EventCard, TicketCard, Modal, Countdown, ...
+├── pages/        Admin, Landing, Events, EventDetails, Clubs, ClubDetails, Dashboard, Scan, NotFound
 ├── context/      AuthContext, ThemeContext, EventsContext (tickets, bookmarks, check-ins), ToastContext
 ├── data/         clubs.json (8 clubs), events.json (12 events)
 ├── hooks/        useCountdown, useDebounce, useFakeLoading

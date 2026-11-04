@@ -33,4 +33,6 @@ export const KEYS = {
   interests: 'nexus_interests', // { [email]: string[] }
   checkins: 'nexus_checkins', // { [ticketId]: ISO timestamp }
   seatsTaken: 'nexus_seats_taken', // { [eventId]: number }
+  adminEvents: 'nexus_admin_events', // { added: Event[], edited: {id: Event}, deleted: id[] }
+  adminClubs: 'nexus_admin_clubs', // same shape, for clubs
 };

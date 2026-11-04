@@ -16,13 +16,13 @@ function GoogleG() {
 /**
  * "Sign in with Google" (mock). Calls AuthContext.signIn() and then runs `onSuccess`.
  */
-export default function GoogleButton({ onSuccess, className = '', label = 'Sign in with Google' }) {
+export default function GoogleButton({ onSuccess, className = '', label = 'Sign in with Google', role = 'student' }) {
   const { signIn } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
     setLoading(true);
-    const profile = await signIn();
+    const profile = await signIn(role);
     setLoading(false);
     onSuccess?.(profile);
   };

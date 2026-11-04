@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Icon from './Icon';
 
 /** Accessible modal: closes on Escape / backdrop click, focuses itself, locks body scroll. */
-export default function Modal({ open, onClose, title, children, dismissible = true }) {
+export default function Modal({ open, onClose, title, children, dismissible = true, wide = false }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Modal({ open, onClose, title, children, dismissible = tr
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 30, opacity: 0 }}
             transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-            className="relative max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white p-6 shadow-2xl outline-none dark:bg-[#121833] sm:rounded-3xl"
+            className={`relative max-h-[92vh] w-full ${wide ? 'max-w-2xl' : 'max-w-md'} overflow-y-auto rounded-t-3xl bg-white p-6 shadow-2xl outline-none dark:bg-[#121833] sm:rounded-3xl`}
           >
             {dismissible && (
               <button

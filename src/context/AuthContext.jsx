@@ -4,15 +4,16 @@ import { makeAvatar } from '../utils/avatar';
 
 const AuthContext = createContext(null);
 
-// The "Google account" every mock sign-in returns.
-const MOCK_PROFILE = {
-  name: 'Aarav Sharma',
-  email: 'aarav.sharma@college.edu',
+// The "Google accounts" a mock sign-in can return.
+const MOCK_PROFILES = {
+  student: { name: 'Aarav Sharma', email: 'aarav.sharma@college.edu', role: 'student' },
+  admin: { name: 'Campus Admin', email: 'admin@college.edu', role: 'admin' },
 };
 
 /**
- * Mock Google auth. `signIn()` stores a fake profile in localStorage; there is no real OAuth.
- * Interests (used for "For You") are stored per-user so a returning user skips onboarding.
+ * Mock Google auth. `signIn(role)` stores a fake profile in localStorage; there is no real OAuth.
+ * `role` is 'student' (default) or 'admin'. Admins get the /admin panel.
+ * Interests (used for "For You") are stored per-user so a returning student skips onboarding.
  * Also owns the sign-in modal's open/closed state so any page can ask the user to sign in.
  */
 export function AuthProvider({ children }) {
@@ -20,11 +21,12 @@ export function AuthProvider({ children }) {
   const [interestsMap, setInterestsMap] = useState(() => storage.get(KEYS.interests, {}));
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  const signIn = useCallback(() => {
+  const signIn = useCallback((role = 'student') => {
     // Simulate the Google popup round-trip.
     return new Promise((resolve) => {
       setTimeout(() => {
-        const profile = { ...MOCK_PROFILE, avatar: makeAvatar(MOCK_PROFILE.name) };
+        const base = MOCK_PROFILES[role] || MOCK_PROFILES.student;
+        const profile = { ...base, avatar: makeAvatar(base.name) };
         storage.set(KEYS.user, profile);
         setUser(profile);
         setAuthModalOpen(false);
@@ -41,9 +43,10 @@ export function AuthProvider({ children }) {
   const openAuthModal = useCallback(() => setAuthModalOpen(true), []);
   const closeAuthModal = useCallback(() => setAuthModalOpen(false), []);
 
+  const isAdmin = user?.role === 'admin';
   const interests = user ? interestsMap[user.email] || null : null;
-  // First login = this user has never picked interests.
-  const needsOnboarding = !!user && interests === null;
+  // First login = this student has never picked interests (admins skip onboarding).
+  const needsOnboarding = !!user && !isAdmin && interests === null;
 
   const saveInterests = useCallback(
     (list) => {
@@ -61,6 +64,7 @@ export function AuthProvider({ children }) {
     () => ({
       user,
       isAuthenticated: !!user,
+      isAdmin,
       signIn,
       signOut,
       interests: interests || [],
@@ -70,7 +74,7 @@ export function AuthProvider({ children }) {
       openAuthModal,
       closeAuthModal,
     }),
-    [user, signIn, signOut, interests, needsOnboarding, saveInterests, authModalOpen, openAuthModal, closeAuthModal]
+    [user, isAdmin, signIn, signOut, interests, needsOnboarding, saveInterests, authModalOpen, openAuthModal, closeAuthModal]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -33,7 +33,7 @@ export default function EventDetails() {
       {/* Banner */}
       <div className="relative h-64 overflow-hidden sm:h-80">
         <div className={`absolute inset-0 bg-gradient-to-br ${event.gradient}`} aria-hidden="true" />
-        {imgOk && (
+        {imgOk && event.poster && (
           <img src={event.poster} alt={`${event.title} poster`} onError={() => setImgOk(false)} className="absolute inset-0 h-full w-full object-cover" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent" aria-hidden="true" />

@@ -24,7 +24,7 @@ export function Logo() {
 }
 
 export default function Navbar() {
-  const { user, isAuthenticated, signOut, openAuthModal } = useAuth();
+  const { user, isAuthenticated, isAdmin, signOut, openAuthModal } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -80,6 +80,11 @@ export default function Navbar() {
               Dashboard
             </NavLink>
           )}
+          {isAdmin && (
+            <NavLink to="/admin" className={linkClass}>
+              Admin
+            </NavLink>
+          )}
         </div>
 
         <div className="flex items-center gap-1.5">
@@ -111,6 +116,11 @@ export default function Navbar() {
                   <Link role="menuitem" to="/dashboard" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-white/10">
                     <Icon name="home" className="h-4 w-4" /> Dashboard
                   </Link>
+                  {isAdmin && (
+                    <Link role="menuitem" to="/admin" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-white/10">
+                      <Icon name="shield" className="h-4 w-4" /> Admin panel
+                    </Link>
+                  )}
                   <button
                     role="menuitem"
                     type="button"
@@ -151,9 +161,16 @@ export default function Navbar() {
               </NavLink>
             ))}
             {isAuthenticated ? (
-              <NavLink to="/dashboard" className={linkClass}>
-                Dashboard
-              </NavLink>
+              <>
+                <NavLink to="/dashboard" className={linkClass}>
+                  Dashboard
+                </NavLink>
+                {isAdmin && (
+                  <NavLink to="/admin" className={linkClass}>
+                    Admin
+                  </NavLink>
+                )}
+              </>
             ) : (
               <button type="button" onClick={openAuthModal} className="btn-primary mt-2">
                 Sign in

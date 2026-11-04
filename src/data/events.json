@@ -1,0 +1,222 @@
+[
+  {
+    "id": "hack-the-campus",
+    "title": "Hack the Campus 24h Hackathon",
+    "club": "coding-club",
+    "dayOffset": 2,
+    "time": "10:00",
+    "durationHours": 24,
+    "venue": "Innovation Lab, Block C",
+    "category": "Hackathon",
+    "tags": [
+      "coding",
+      "entrepreneurship"
+    ],
+    "capacity": 200,
+    "seatsLeft": 34,
+    "poster": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-indigo-500 to-blue-600",
+    "description": "Build something awesome in 24 hours. Teams of up to four, mentors from industry, and prizes worth ₹1,00,000. Food, snacks and caffeine provided."
+  },
+  {
+    "id": "robo-wars",
+    "title": "Robo Wars: Combat Arena",
+    "club": "robotics-club",
+    "dayOffset": 5,
+    "time": "14:00",
+    "durationHours": 5,
+    "venue": "Main Auditorium",
+    "category": "Competition",
+    "tags": [
+      "robotics"
+    ],
+    "capacity": 150,
+    "seatsLeft": 12,
+    "poster": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-emerald-500 to-teal-600",
+    "description": "Bring your bot and battle it out in the arena. Weight classes of 8 kg and 15 kg. Spectators welcome, with live commentary and a giant screen."
+  },
+  {
+    "id": "battle-of-bands",
+    "title": "Battle of Bands 2026",
+    "club": "music-society",
+    "dayOffset": 7,
+    "time": "18:00",
+    "durationHours": 4,
+    "venue": "Open Air Theatre",
+    "category": "Cultural",
+    "tags": [
+      "music",
+      "art"
+    ],
+    "capacity": 500,
+    "seatsLeft": 210,
+    "poster": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-fuchsia-500 to-pink-600",
+    "description": "Eight bands, one stage, one winner. Rock, indie, fusion and metal all collide under the lights. Gates open at 5:30 PM."
+  },
+  {
+    "id": "pitch-night",
+    "title": "Startup Pitch Night",
+    "club": "e-cell",
+    "dayOffset": 3,
+    "time": "17:30",
+    "durationHours": 3,
+    "venue": "Seminar Hall 2",
+    "category": "Talk",
+    "tags": [
+      "entrepreneurship"
+    ],
+    "capacity": 120,
+    "seatsLeft": 45,
+    "poster": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-orange-500 to-amber-600",
+    "description": "Ten student founders pitch to a panel of angel investors. Network with founders and learn how real term sheets work."
+  },
+  {
+    "id": "photo-walk",
+    "title": "Golden Hour Photo Walk",
+    "club": "photography-club",
+    "dayOffset": 1,
+    "time": "16:30",
+    "durationHours": 2,
+    "venue": "Lake Garden Entrance",
+    "category": "Workshop",
+    "tags": [
+      "art"
+    ],
+    "capacity": 40,
+    "seatsLeft": 8,
+    "poster": "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-sky-500 to-cyan-600",
+    "description": "Learn composition and light with a pro photographer while we walk the campus at golden hour. Bring any camera or just your phone."
+  },
+  {
+    "id": "street-play",
+    "title": "Nukkad: Street Play Festival",
+    "club": "drama-club",
+    "dayOffset": 9,
+    "time": "11:00",
+    "durationHours": 5,
+    "venue": "Central Quadrangle",
+    "category": "Cultural",
+    "tags": [
+      "art"
+    ],
+    "capacity": 300,
+    "seatsLeft": 120,
+    "poster": "https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-rose-500 to-red-600",
+    "description": "Six teams perform powerful street plays on social themes. Free entry, but register to get your seat and the souvenir badge."
+  },
+  {
+    "id": "inter-dept-cricket",
+    "title": "Inter-Department Cricket Finals",
+    "club": "sports-council",
+    "dayOffset": 4,
+    "time": "09:00",
+    "durationHours": 8,
+    "venue": "Main Cricket Ground",
+    "category": "Sports",
+    "tags": [
+      "sports"
+    ],
+    "capacity": 400,
+    "seatsLeft": 0,
+    "poster": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-lime-500 to-green-700",
+    "description": "The two best department teams fight for the championship trophy. Food stalls and live scoreboard on the ground."
+  },
+  {
+    "id": "ml-bootcamp",
+    "title": "Intro to Machine Learning Bootcamp",
+    "club": "aiml-club",
+    "dayOffset": 6,
+    "time": "10:00",
+    "durationHours": 6,
+    "venue": "Computer Lab 3",
+    "category": "Workshop",
+    "tags": [
+      "coding",
+      "robotics"
+    ],
+    "capacity": 80,
+    "seatsLeft": 22,
+    "poster": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-violet-500 to-purple-700",
+    "description": "Go from zero to your first trained model in a day. We use Python, scikit-learn and Google Colab. Laptop required, no prior ML needed."
+  },
+  {
+    "id": "open-mic",
+    "title": "Acoustic Open Mic Night",
+    "club": "music-society",
+    "dayOffset": 0,
+    "time": "19:00",
+    "durationHours": 3,
+    "venue": "Student Cafe Terrace",
+    "category": "Cultural",
+    "tags": [
+      "music"
+    ],
+    "capacity": 90,
+    "seatsLeft": 30,
+    "poster": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-pink-500 to-rose-600",
+    "description": "Sing, strum, recite or just listen. Sign up on the spot for a five-minute slot. Cozy lights, hot chocolate and good vibes."
+  },
+  {
+    "id": "git-github",
+    "title": "Git & GitHub for Beginners",
+    "club": "coding-club",
+    "dayOffset": 10,
+    "time": "15:00",
+    "durationHours": 2,
+    "venue": "Computer Lab 1",
+    "category": "Workshop",
+    "tags": [
+      "coding"
+    ],
+    "capacity": 100,
+    "seatsLeft": 61,
+    "poster": "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-slate-600 to-indigo-600",
+    "description": "Learn version control, branching, pull requests and how to make your first open-source contribution."
+  },
+  {
+    "id": "drone-workshop",
+    "title": "Build Your Own Drone",
+    "club": "robotics-club",
+    "dayOffset": 12,
+    "time": "10:30",
+    "durationHours": 5,
+    "venue": "Robotics Lab",
+    "category": "Workshop",
+    "tags": [
+      "robotics"
+    ],
+    "capacity": 30,
+    "seatsLeft": 5,
+    "poster": "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-teal-500 to-emerald-700",
+    "description": "Assemble, calibrate and fly a quadcopter in one session. All parts included. Limited seats, register early."
+  },
+  {
+    "id": "founder-talk",
+    "title": "Founder Talk: From Dorm to Unicorn",
+    "club": "e-cell",
+    "dayOffset": 14,
+    "time": "16:00",
+    "durationHours": 2,
+    "venue": "Main Auditorium",
+    "category": "Talk",
+    "tags": [
+      "entrepreneurship",
+      "coding"
+    ],
+    "capacity": 450,
+    "seatsLeft": 300,
+    "poster": "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1200&q=70",
+    "gradient": "from-amber-500 to-orange-700",
+    "description": "An alumnus who built a billion-dollar startup shares the highs, lows and lessons. Open Q&A at the end."
+  }
+]

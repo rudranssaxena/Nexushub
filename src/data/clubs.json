@@ -1,0 +1,82 @@
+[
+  {
+    "id": "coding-club",
+    "name": "Coding Club",
+    "emoji": "💻",
+    "gradient": "from-indigo-500 to-blue-500",
+    "description": "Weekly DSA sessions, open-source sprints and hackathons for every skill level. From your first 'Hello World' to competitive programming.",
+    "members": 420,
+    "tags": ["coding", "entrepreneurship"],
+    "category": "Technology"
+  },
+  {
+    "id": "robotics-club",
+    "name": "Robotics Club",
+    "emoji": "🤖",
+    "gradient": "from-emerald-500 to-teal-500",
+    "description": "Build line followers, drones and robotic arms. We run hands-on workshops with Arduino, Raspberry Pi and ROS.",
+    "members": 185,
+    "tags": ["robotics", "coding"],
+    "category": "Technology"
+  },
+  {
+    "id": "music-society",
+    "name": "Music Society",
+    "emoji": "🎸",
+    "gradient": "from-fuchsia-500 to-pink-500",
+    "description": "Bands, a cappella, classical and open mics. Jam rooms are open every evening and the Battle of Bands is our flagship show.",
+    "members": 260,
+    "tags": ["music", "art"],
+    "category": "Arts"
+  },
+  {
+    "id": "e-cell",
+    "name": "Entrepreneurship Cell",
+    "emoji": "🚀",
+    "gradient": "from-orange-500 to-amber-500",
+    "description": "Turn ideas into startups. Pitch nights, founder talks, a campus incubator and seed-funding connections.",
+    "members": 310,
+    "tags": ["entrepreneurship", "coding"],
+    "category": "Business"
+  },
+  {
+    "id": "photography-club",
+    "name": "Photography Club",
+    "emoji": "📸",
+    "gradient": "from-sky-500 to-cyan-500",
+    "description": "Photo walks, darkroom nights and editing masterclasses. We cover every campus fest and run a yearly exhibition.",
+    "members": 215,
+    "tags": ["art"],
+    "category": "Arts"
+  },
+  {
+    "id": "drama-club",
+    "name": "Drama Club",
+    "emoji": "🎭",
+    "gradient": "from-rose-500 to-red-500",
+    "description": "Stage plays, street theatre and improv. Acting, scriptwriting, set design and direction, all welcome.",
+    "members": 140,
+    "tags": ["art", "music"],
+    "category": "Arts"
+  },
+  {
+    "id": "sports-council",
+    "name": "Sports Council",
+    "emoji": "🏏",
+    "gradient": "from-lime-500 to-green-600",
+    "description": "Inter-department leagues, fitness bootcamps and the annual sports meet across 14 sports.",
+    "members": 530,
+    "tags": ["sports"],
+    "category": "Sports"
+  },
+  {
+    "id": "aiml-club",
+    "name": "AI/ML Club",
+    "emoji": "🧠",
+    "gradient": "from-violet-500 to-purple-600",
+    "description": "Paper reading groups, Kaggle teams and applied ML workshops. Learn to train, tune and ship models.",
+    "members": 295,
+    "tags": ["coding", "robotics"],
+    "category": "Technology"
+  }
+]
